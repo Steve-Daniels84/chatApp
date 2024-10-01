@@ -14,7 +14,7 @@ const StartScreen = ({ navigation }) => {
       />
       <Button
         title="Go to Chat Screen"
-        onPress={() => navigation.navigate("ChatScreen")}
+        onPress={() => navigation.navigate("ChatScreen", {name: name})}
       />
     </View>
   );
@@ -28,7 +28,11 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   input: {
-    fontSize: "large",
+    width: "88%",
+    padding: 15,
+    borderWidth: 1,
+    marginTop: 15,
+    marginBottom: 15
   },
 });
 
