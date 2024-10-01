@@ -1,29 +1,52 @@
-import {useEffect} from 'react';
-import { StyleSheet, View, Text, Button } from 'react-native';
+import { useEffect } from "react";
+import { StyleSheet, View, Text, Button } from "react-native";
 
-const ChatScreen = ({route, navigation}) => {
+const ChatScreen = ({ route, navigation }) => {
+  const { name } = route.params;
 
-    const { name } = route.params;
+  useEffect(() => {
+    navigation.setOptions({ title: name });
+  }, []);
 
-    useEffect(() => {
-        navigation.setOptions({ title: name });
-      }, []);
-
-    return (
-        <View style={styles.container}>
-            <Text>Chat Screen</Text>
-            <Text value={name}></Text>
-        </View>
-    );
+  return (
+    <View style={styles.container}>
+      <View style={styles.header}></View>
+      <View  style={styles.body}>
+        <Text>Chat Screen</Text>
+        <Text value={name}></Text>
+      </View>
+      <View  style={styles.footer}></View>
+    </View>
+  );
 };
 
 const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      justifyContent: "center",
-      alignItems: "center",
-      textAlign: 'center'
-    }
-  });
+  container: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    textAlign: "center",
+  },
+  header: {
+    flex: 2,
+    justifyContent: "center",
+    alignItems: "center",
+    textAlign: "center",
+    backgroundColor: "grey"
+  },
+  body: {
+    flex: 14,
+    justifyContent: "center",
+    alignItems: "center",
+    textAlign: "center",
+  },
+  footer: {
+    flex: 4,
+    justifyContent: "center",
+    alignItems: "center",
+    textAlign: "center",
+    backgroundColor: "grey"
+  }
+});
 
-export default ChatScreen
+export default ChatScreen;
