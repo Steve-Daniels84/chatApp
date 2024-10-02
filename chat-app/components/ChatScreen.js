@@ -10,12 +10,15 @@ const ChatScreen = ({ route, navigation }) => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.header}></View>
+      <View style={styles.header}>
+        <Text>Test</Text>
+      </View>
       <View  style={styles.body}>
         <Text>Chat Screen</Text>
-        <Text value={name}></Text>
       </View>
-      <View  style={styles.footer}></View>
+      <View  style={styles.footer}>
+      <Text>Test</Text>
+      </View>
     </View>
   );
 };
@@ -28,24 +31,27 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   header: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    textAlign: "center",
+    backgroundColor: "grey",
+    width: '100%'
+  },
+  body: {
+    flex: 15,
+    justifyContent: "center",
+    alignItems: "center",
+    textAlign: "center",
+    width: '100%'
+  },
+  footer: {
     flex: 2,
     justifyContent: "center",
     alignItems: "center",
     textAlign: "center",
-    backgroundColor: "grey"
-  },
-  body: {
-    flex: 14,
-    justifyContent: "center",
-    alignItems: "center",
-    textAlign: "center",
-  },
-  footer: {
-    flex: 4,
-    justifyContent: "center",
-    alignItems: "center",
-    textAlign: "center",
-    backgroundColor: "grey"
+    backgroundColor: "grey",
+    width: '100%'
   }
 });
 
