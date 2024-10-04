@@ -48,23 +48,23 @@ The goal of this project is to build a fully functional chat app for both Androi
 
 ## Setup Instructions
 
-	1.	Clone the repository:
+1. Clone the repository:
     git clone https://github.com/your-repo/chat-app.git
     cd chat-app
 
-    2.	Install dependencies:
-    npm install
+2. Install dependencies:
+npm install
 
-    3.	Run the app:
-    expo start
+3. Run the app:
+expo start
 
-    4.	Firebase Setup: 
-	•	Create a Firebase project.
-	•	Enable Firebase Firestore, Firebase Cloud Storage, and Firebase Authentication (Anonymous       sign-in).
-	•	Add Firebase configuration to the project in a .env file.
+4. Firebase Setup: 
+**Create a Firebase project.**
+-   Enable Firebase Firestore, Firebase Cloud Storage, and Firebase Authentication (Anonymous       sign-in).
+- Add Firebase configuration to the project in a .env file.
 	
-    5.	Building for iOS/Android:
-    Follow the Expo documentation to build the app for iOS or Android:
-	•	Building for iOS
-	•	Building for Android
+5. Building for iOS/Android:
+Follow the Expo documentation to build the app for iOS or Android:
+- Building for iOS
+- Building for Android
 
