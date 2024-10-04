@@ -3,7 +3,6 @@ import {
   StyleSheet,
   View,
   Text,
-  Button,
   TextInput,
   Pressable,
   ImageBackground,
@@ -40,7 +39,7 @@ const StartScreen = ({ navigation }) => {
           Chat App
         </Text>
 
-        {/* Main UI comntainer */}
+        {/* Main UI container */}
         <View
           style={{
             width: "88%",
@@ -56,8 +55,8 @@ const StartScreen = ({ navigation }) => {
             placeholder="Your name"
             value={name}
           />
-            {/* User background color choice */}
-          <View style={styles.colorPicker}>
+            {/* User background color choice *
+          <View style={styles.colorPicker}>2525
             <Text style={{ fontSize: 16, fontWeight: "300", color: "#787083" }}>
               Choose background colour:
             </Text>
@@ -65,39 +64,27 @@ const StartScreen = ({ navigation }) => {
               style={{ flex: 1, flexDirection: "row", marginTop: 10, gap: 15 }}
             >
               <TouchableOpacity
-                style={{
+                style={[styles.colorChoice, {
                   backgroundColor: "#090C08",
-                  borderRadius: 20,
-                  height: 40,
-                  width: 40,
-                }}
+                }]}
                 onPress={() => {setBackgroundColor("#090C08")}}
               ></TouchableOpacity>
               <TouchableOpacity
-                style={{
+                style={[styles.colorChoice, {
                   backgroundColor: "#474056",
-                  borderRadius: 20,
-                  height: 40,
-                  width: 40,
-                }}
+                }]}
                 onPress={() => {setBackgroundColor("#474056")}}
                 ></TouchableOpacity>
               <TouchableOpacity
-                style={{
-                  backgroundColor: "#8A95A5",
-                  borderRadius: 20,
-                  height: 40,
-                  width: 40,
-                }}
+                style={[styles.colorChoice ,{
+                  backgroundColor: "#8A95A5"
+                }]}
                 onPress={() => {setBackgroundColor("#8A95A5")}}
                 ></TouchableOpacity>
               <TouchableOpacity
-                style={{
+                style={[styles.colorChoice,{
                   backgroundColor: "#B9C6AE",
-                  borderRadius: 20,
-                  height: 40,
-                  width: 40,
-                }}
+                }]}
                 onPress={() => {setBackgroundColor("#B9C6AE")}}
                 ></TouchableOpacity>
             </View>
@@ -135,6 +122,12 @@ const styles = StyleSheet.create({
     alignItems: "center",
     textAlign: "center",
   },
+  background: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    width: "100%",
+  },
   input: {
     flex: 1,
     width: "88%",
@@ -152,6 +145,11 @@ const styles = StyleSheet.create({
     position: "fixed",
     width: "88%",
   },
+  colorChoice: {
+    borderRadius: 20,
+    height: 40,
+    width: 40,
+  },
   wrapperCustom: {
     flex: 1,
     width: "88%",
@@ -160,12 +158,7 @@ const styles = StyleSheet.create({
     margin: 15,
     position: "fixed",
   },
-  background: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    width: "100%",
-  },
+
 });
 
 export default StartScreen;
