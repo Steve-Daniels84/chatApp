@@ -1,12 +1,15 @@
 import { useEffect, useState } from "react";
-import { StyleSheet, View, Text, Button, ScrollView } from "react-native";
+import { StyleSheet, View, Text, Button, ScrollView, TextInput } from "react-native";
 
 const ChatScreen = ({ route, navigation }) => {
-  const { name, backgroundColor } = route.params;
 
-  useEffect(() => {
-    navigation.setOptions({ title: name });
-  }, []);
+    //Brings in the navigator parameters
+    const { name, backgroundColor } = route.params;
+
+    // Sets the page title
+    useEffect(() => {
+        navigation.setOptions({ title: name });
+    }, []);
 
   return (
     <View style={[styles.container, { backgroundColor: backgroundColor }]}>
@@ -15,12 +18,12 @@ const ChatScreen = ({ route, navigation }) => {
       </View>
       <View style={styles.body}>
         <Text>Chat Screen</Text>
-        <ScrollView style={{ textAlign: "left", width: "100%" }}>
+        <ScrollView style={{ textAlign: "left", width: "100%", padding: 10 }}>
           <Text>Test</Text>
         </ScrollView>
       </View>
       <View style={styles.footer}>
-        <Text>Menu</Text>
+        <TextInput placeholder="Type your message here"/>
       </View>
     </View>
   );

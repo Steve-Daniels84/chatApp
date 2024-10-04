@@ -5,6 +5,7 @@ import ChatScreen from "./components/ChatScreen";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
+//Sets up navigation stack
 const Stack = createNativeStackNavigator();
 
 const App = () => {
