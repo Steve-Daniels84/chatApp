@@ -1,22 +1,22 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { StyleSheet, View, Text, Button, ScrollView } from "react-native";
 
 const ChatScreen = ({ route, navigation }) => {
-  const { name } = route.params;
+  const { name, backgroundColor } = route.params;
 
   useEffect(() => {
     navigation.setOptions({ title: name });
   }, []);
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: backgroundColor }]}>
       <View style={styles.header}>
         <Text>Conversation</Text>
       </View>
       <View style={styles.body}>
         <Text>Chat Screen</Text>
-        <ScrollView style={{textAlign: "left"}}>
-            <Text>Test</Text>
+        <ScrollView style={{ textAlign: "left", width: "100%" }}>
+          <Text>Test</Text>
         </ScrollView>
       </View>
       <View style={styles.footer}>
@@ -38,7 +38,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     textAlign: "center",
-    backgroundColor: "grey",
     width: "100%",
   },
   body: {
@@ -53,7 +52,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     textAlign: "center",
-    backgroundColor: "grey",
     width: "100%",
   },
 });
