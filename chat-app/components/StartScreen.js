@@ -55,7 +55,7 @@ const StartScreen = ({ navigation }) => {
             placeholder="Your name"
             value={name}
           />
-            {/* User background color choice *
+            {/* User background color choice */}
           <View style={styles.colorPicker}>2525
             <Text style={{ fontSize: 16, fontWeight: "300", color: "#787083" }}>
               Choose background colour:
