@@ -6,20 +6,19 @@ import {
   TextInput,
   Pressable,
   ImageBackground,
-  TouchableOpacity
+  TouchableOpacity,
 } from "react-native";
 import Background from "../assets/Background Image.png";
 
 const StartScreen = ({ navigation }) => {
   const [name, setName] = useState("");
-  const [backgroundColor, setBackgroundColor] = useState("")
+  const [backgroundColor, setBackgroundColor] = useState("");
 
   useEffect(() => {
     navigation.setOptions({ title: "Login" });
   }, []);
 
   return (
-    // Main container
     <View style={styles.container}>
       {/* background image container  */}
       <ImageBackground
@@ -48,15 +47,15 @@ const StartScreen = ({ navigation }) => {
             alignItems: "center",
           }}
         >
-            {/* User input for name */}
+          {/* User input for name */}
           <TextInput
             style={styles.input}
             onChangeText={setName}
             placeholder="Your name"
             value={name}
           />
-            {/* User background color choice */}
-          <View style={styles.colorPicker}>2525
+          {/* User background color choice */}
+          <View style={styles.colorPicker}>
             <Text style={{ fontSize: 16, fontWeight: "300", color: "#787083" }}>
               Choose background colour:
             </Text>
@@ -64,34 +63,59 @@ const StartScreen = ({ navigation }) => {
               style={{ flex: 1, flexDirection: "row", marginTop: 10, gap: 15 }}
             >
               <TouchableOpacity
-                style={[styles.colorChoice, {
-                  backgroundColor: "#090C08",
-                }]}
-                onPress={() => {setBackgroundColor("#090C08")}}
+                style={[
+                  styles.colorChoice,
+                  {
+                    backgroundColor: "#090C08",
+                  },
+                ]}
+                onPress={() => {
+                  setBackgroundColor("#090C08");
+                }}
               ></TouchableOpacity>
               <TouchableOpacity
-                style={[styles.colorChoice, {
-                  backgroundColor: "#474056",
-                }]}
-                onPress={() => {setBackgroundColor("#474056")}}
-                ></TouchableOpacity>
+                style={[
+                  styles.colorChoice,
+                  {
+                    backgroundColor: "#474056",
+                  },
+                ]}
+                onPress={() => {
+                  setBackgroundColor("#474056");
+                }}
+              ></TouchableOpacity>
               <TouchableOpacity
-                style={[styles.colorChoice ,{
-                  backgroundColor: "#8A95A5"
-                }]}
-                onPress={() => {setBackgroundColor("#8A95A5")}}
-                ></TouchableOpacity>
+                style={[
+                  styles.colorChoice,
+                  {
+                    backgroundColor: "#8A95A5",
+                  },
+                ]}
+                onPress={() => {
+                  setBackgroundColor("#8A95A5");
+                }}
+              ></TouchableOpacity>
               <TouchableOpacity
-                style={[styles.colorChoice,{
-                  backgroundColor: "#B9C6AE",
-                }]}
-                onPress={() => {setBackgroundColor("#B9C6AE")}}
-                ></TouchableOpacity>
+                style={[
+                  styles.colorChoice,
+                  {
+                    backgroundColor: "#B9C6AE",
+                  },
+                ]}
+                onPress={() => {
+                  setBackgroundColor("#B9C6AE");
+                }}
+              ></TouchableOpacity>
             </View>
           </View>
 
           <Pressable
-            onPress={() => navigation.navigate("ChatScreen", { name: name, backgroundColor: backgroundColor })}
+            onPress={() =>
+              navigation.navigate("ChatScreen", {
+                name: name,
+                backgroundColor: backgroundColor,
+              })
+            }
             style={({ pressed }) => [
               {
                 backgroundColor: pressed ? "white" : "grey",
@@ -158,7 +182,6 @@ const styles = StyleSheet.create({
     margin: 15,
     position: "fixed",
   },
-
 });
 
 export default StartScreen;

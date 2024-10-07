@@ -11,7 +11,7 @@ const Stack = createNativeStackNavigator();
 const App = () => {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="StartScreen">
+      <Stack.Navigator initialRouteName="StartScreen" >
         <Stack.Screen name="StartScreen" component={StartScreen} />
         <Stack.Screen name="ChatScreen" component={ChatScreen} />
       </Stack.Navigator>
@@ -21,7 +21,7 @@ const App = () => {
 
 const styles = StyleSheet.create({
   container: {
-    flex: "1",
+    flex: 1,
     backgroundColor: "#fff",
     alignItems: "center",
     justifyContent: "center",
