@@ -159,14 +159,12 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     margin: 15,
     marginBottom: 15,
-    position: "fixed",
     fontSize: 16,
     fontWeight: "300",
     color: "#757083",
   },
   colorPicker: {
     flex: 3,
-    position: "fixed",
     width: "88%",
   },
   colorChoice: {
@@ -180,7 +178,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     margin: 15,
-    position: "fixed",
   },
 });
 
