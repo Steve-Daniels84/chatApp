@@ -10,7 +10,12 @@ const ChatScreen = ({ route, navigation }) => {
 
     // Sets the page title
     useEffect(() => {
-        navigation.setOptions({ title: name });
+        navigation.setOptions({ 
+          title: name,
+          headerStyle: {
+            backgroundColor: backgroundColor
+          }
+         });
         setMessages([
           {
             _id: 1,
@@ -25,21 +30,21 @@ const ChatScreen = ({ route, navigation }) => {
         ]);
     }, []);
 
+    const onSend = (newMessages) => {
+      setMessages(previousMessages => GiftedChat.append(previousMessages, newMessages))
+    }
+
   return (
-    <View style={[styles.container, { backgroundColor: backgroundColor }]}>
-      <View style={styles.header}>
-        <Text>Conversation</Text>
-      </View>
-      <View style={styles.body}>
-        <Text>Chat Screen</Text>
-        <ScrollView style={{ textAlign: "left", width: "100%", padding: 10 }}>
-          <Text>Test</Text>
-        </ScrollView>
-      </View>
-      <View style={styles.footer}>
-        <TextInput placeholder="Type your message here"/>
-      </View>
-    </View>
+
+      <GiftedChat
+      messages={messages}
+      onSend={messages => onSend(messages)}
+      user={{
+        _id: 1
+      }}
+      style={{}}
+    />
+
   );
 };
 
@@ -59,13 +64,6 @@ const styles = StyleSheet.create({
   },
   body: {
     flex: 15,
-    justifyContent: "center",
-    alignItems: "center",
-    textAlign: "center",
-    width: "100%",
-  },
-  footer: {
-    flex: 2,
     justifyContent: "center",
     alignItems: "center",
     textAlign: "center",
