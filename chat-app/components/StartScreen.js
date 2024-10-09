@@ -55,6 +55,10 @@ const StartScreen = ({ navigation }) => {
             onChangeText={setName}
             placeholder="Your name"
             value={name}
+            accessible={true}
+            accessibilityLabel="Enter your name"
+            accessibilityHint="Enter your name into this input"
+
           />
           {/* User background color choice */}
           <View style={styles.colorPicker}>
@@ -74,6 +78,9 @@ const StartScreen = ({ navigation }) => {
                 onPress={() => {
                   setBackgroundColor("#090C08");
                 }}
+                accessible={true}
+                accessibilityLabel="Set background color to black"
+                accessibilityHint="Press this button to set your background color to black"
               ></TouchableOpacity>
               <TouchableOpacity
                 style={[
@@ -85,6 +92,9 @@ const StartScreen = ({ navigation }) => {
                 onPress={() => {
                   setBackgroundColor("#474056");
                 }}
+                accessible={true}
+                accessibilityLabel="Set background color to dark blue"
+                accessibilityHint="Press this button to set your background color to dark blue"
               ></TouchableOpacity>
               <TouchableOpacity
                 style={[
@@ -96,6 +106,9 @@ const StartScreen = ({ navigation }) => {
                 onPress={() => {
                   setBackgroundColor("#8A95A5");
                 }}
+                accessible={true}
+                accessibilityLabel="Set background color to light blue"
+                accessibilityHint="Press this button to set your background color to light blue"
               ></TouchableOpacity>
               <TouchableOpacity
                 style={[
@@ -107,6 +120,9 @@ const StartScreen = ({ navigation }) => {
                 onPress={() => {
                   setBackgroundColor("#B9C6AE");
                 }}
+                accessible={true}
+                accessibilityLabel="Set background color to green"
+                accessibilityHint="Press this button to set your background color to green"
               ></TouchableOpacity>
             </View>
           </View>
@@ -124,6 +140,9 @@ const StartScreen = ({ navigation }) => {
               },
               styles.wrapperCustom,
             ]}
+            accessible={true}
+            accessibilityLabel="Start Chatting"
+            accessibilityHint="Press this button to move to the chat screen"
           >
             <Text
               style={{
