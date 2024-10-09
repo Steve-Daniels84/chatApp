@@ -7,9 +7,9 @@ import {
   ScrollView,
   TextInput,
   KeyboardAvoidingView,
-  Platform
+  Platform,
 } from "react-native";
-import { GiftedChat } from "react-native-gifted-chat";
+import { GiftedChat, Bubble } from "react-native-gifted-chat";
 
 const ChatScreen = ({ route, navigation }) => {
   const [messages, setMessages] = useState([]);
@@ -36,6 +36,12 @@ const ChatScreen = ({ route, navigation }) => {
           avatar: "https://placeimg.com/140/140/any",
         },
       },
+      {
+        _id: 2,
+        text: "This is a system message",
+        createdAt: new Date(),
+        system: true,
+      },
     ]);
   }, []);
 
@@ -45,17 +51,34 @@ const ChatScreen = ({ route, navigation }) => {
     );
   };
 
+  const renderBubble = (props) => {
+    return <Bubble 
+      {...props}
+      wrapperStyle={{
+        right: {
+          backgroundColor: "blue"
+        },
+        left: {
+          backgroundColor: "green",
+        }
+      }}
+    />
+  }
+
   return (
     <View style={styles.container}>
       <GiftedChat
         messages={messages}
+        renderBubble={renderBubble}
         onSend={(messages) => onSend(messages)}
         user={{
           _id: 1,
         }}
         style={{}}
       />
-            {Platform.OS === "ios"?<KeyboardAvoidingView behavior="padding" />: null}
+      {Platform.OS === "ios" || "android" ? (
+        <KeyboardAvoidingView behavior="padding" />
+      ) : null}
     </View>
   );
 };

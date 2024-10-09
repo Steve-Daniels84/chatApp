@@ -7,6 +7,8 @@ import {
   Pressable,
   ImageBackground,
   TouchableOpacity,
+  KeyboardAvoidingView,
+  Platform
 } from "react-native";
 import Background from "../assets/Background Image.png";
 
@@ -134,6 +136,7 @@ const StartScreen = ({ navigation }) => {
             </Text>
           </Pressable>
         </View>
+        {Platform.OS === "ios" || "android" ?<KeyboardAvoidingView behavior="padding" />: null}
       </ImageBackground>
     </View>
   );
