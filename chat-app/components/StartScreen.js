@@ -58,8 +58,8 @@ const StartScreen = ({ navigation }) => {
             accessible={true}
             accessibilityLabel="Enter your name"
             accessibilityHint="Enter your name into this input"
-
-          />
+            accessibilityValue={name}
+/>
           {/* User background color choice */}
           <View style={styles.colorPicker}>
             <Text style={{ fontSize: 16, fontWeight: "300", color: "#787083" }}>
@@ -81,6 +81,7 @@ const StartScreen = ({ navigation }) => {
                 accessible={true}
                 accessibilityLabel="Set background color to black"
                 accessibilityHint="Press this button to set your background color to black"
+                accessibilityRole="button"
               ></TouchableOpacity>
               <TouchableOpacity
                 style={[
@@ -95,6 +96,7 @@ const StartScreen = ({ navigation }) => {
                 accessible={true}
                 accessibilityLabel="Set background color to dark blue"
                 accessibilityHint="Press this button to set your background color to dark blue"
+                accessibilityRole="button"
               ></TouchableOpacity>
               <TouchableOpacity
                 style={[
@@ -109,6 +111,7 @@ const StartScreen = ({ navigation }) => {
                 accessible={true}
                 accessibilityLabel="Set background color to light blue"
                 accessibilityHint="Press this button to set your background color to light blue"
+                accessibilityRole="button"
               ></TouchableOpacity>
               <TouchableOpacity
                 style={[
@@ -123,6 +126,7 @@ const StartScreen = ({ navigation }) => {
                 accessible={true}
                 accessibilityLabel="Set background color to green"
                 accessibilityHint="Press this button to set your background color to green"
+                accessibilityRole="button"
               ></TouchableOpacity>
             </View>
           </View>
@@ -143,6 +147,7 @@ const StartScreen = ({ navigation }) => {
             accessible={true}
             accessibilityLabel="Start Chatting"
             accessibilityHint="Press this button to move to the chat screen"
+            accessibilityRole="button"
           >
             <Text
               style={{
