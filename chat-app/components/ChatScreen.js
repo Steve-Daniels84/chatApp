@@ -78,7 +78,7 @@ const ChatScreen = ({ route, navigation }) => {
     );
   };
 
-
+// Custom input toolbar 
   const renderInputToolbar = (props) => {
     return <InputToolbar 
     {...props}
@@ -88,6 +88,7 @@ const ChatScreen = ({ route, navigation }) => {
     />
   }
 
+// Customer message text input
   const renderComposer = (props) => {
     return <Composer 
     {...props}
@@ -102,6 +103,7 @@ const ChatScreen = ({ route, navigation }) => {
     />
   }
 
+// Custom send button
   const renderSend = (props) => {
     return <Send 
     {...props}
