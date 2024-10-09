@@ -9,7 +9,7 @@ import {
   KeyboardAvoidingView,
   Platform,
 } from "react-native";
-import { GiftedChat, Bubble } from "react-native-gifted-chat";
+import { GiftedChat, Bubble, InputToolbar, Composer, Send, MessageText } from "react-native-gifted-chat";
 
 const ChatScreen = ({ route, navigation }) => {
   const [messages, setMessages] = useState([]);
@@ -56,12 +56,59 @@ const ChatScreen = ({ route, navigation }) => {
       {...props}
       wrapperStyle={{
         right: {
-          backgroundColor: "blue"
+          borderColor: backgroundColor,
+          backgroundColor: "white",
+          padding: 10,
+          margin: 5
         },
         left: {
-          backgroundColor: "green",
+          backgroundColor: "grey",
+          borderWidth: 1,
+          padding: 10
         }
       }}
+    />
+  }
+
+  // Custom message text rendering
+  const renderMessageText = (props) => {
+    return (
+      <Text style={{color: backgroundColor}}>
+        {props.currentMessage.text}
+      </Text>
+    );
+  };
+
+
+  const renderInputToolbar = (props) => {
+    return <InputToolbar 
+    {...props}
+    containerStyle={{
+      padding: 20
+    }}
+    />
+  }
+
+  const renderComposer = (props) => {
+    return <Composer 
+    {...props}
+    textInputStyle={{
+      borderRadius: 10,
+      borderWidth: 1,
+      padding: 5,
+    }}
+    textInputProps={{
+      marginRight: 1
+    }}
+    />
+  }
+
+  const renderSend = (props) => {
+    return <Send 
+    {...props}
+    containerStyle={{
+      minHeight: 60
+    }}
     />
   }
 
@@ -69,7 +116,11 @@ const ChatScreen = ({ route, navigation }) => {
     <View style={styles.container}>
       <GiftedChat
         messages={messages}
+        renderMessageText={renderMessageText}
         renderBubble={renderBubble}
+        renderInputToolbar={renderInputToolbar}
+        renderComposer={renderComposer}
+        renderSend={renderSend}
         onSend={(messages) => onSend(messages)}
         user={{
           _id: 1,
