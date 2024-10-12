@@ -1,4 +1,3 @@
-
 import {
   StyleSheet,
   View,
@@ -8,9 +7,18 @@ import {
   ImageBackground,
   TouchableOpacity,
   KeyboardAvoidingView,
-  Platform
+  Platform,
+  Alert,
 } from "react-native";
 import Background from "../assets/Background Image.png";
+import { useState, useEffect } from "react";
+import {
+  getAuth,
+  signInAnonymously,
+  initializeAuth,
+  getReactNativePersistence,
+} from "firebase/auth";
+import ReactNativeAsyncStorage from "@react-native-async-storage/async-storage";
 
 const StartScreen = ({ navigation }) => {
   const [name, setName] = useState("");
@@ -19,6 +27,23 @@ const StartScreen = ({ navigation }) => {
   useEffect(() => {
     navigation.setOptions({ title: "Login" });
   }, []);
+
+  const auth = getAuth();
+
+  const signInUser = () => {
+    signInAnonymously(auth)
+      .then((result) => {
+        navigation.navigate("ChatScreen", {
+          userID: result.user.uid,
+          backgroundColor: backgroundColor,
+          name: name,
+        });
+        Alert.alert("Signed in Successfully!");
+      })
+      .catch((error) => {
+        Alert.alert("Unable to sign in, try again later.");
+      });
+  };
 
   return (
     <View style={styles.container}>
@@ -59,7 +84,7 @@ const StartScreen = ({ navigation }) => {
             accessibilityLabel="Enter your name"
             accessibilityHint="Enter your name into this input"
             accessibilityValue={name}
-/>
+          />
           {/* User background color choice */}
           <View style={styles.colorPicker}>
             <Text style={{ fontSize: 16, fontWeight: "300", color: "#787083" }}>
@@ -132,12 +157,7 @@ const StartScreen = ({ navigation }) => {
           </View>
 
           <Pressable
-            onPress={() =>
-              navigation.navigate("ChatScreen", {
-                name: name,
-                backgroundColor: backgroundColor,
-              })
-            }
+            onPress={signInUser}
             style={({ pressed }) => [
               {
                 backgroundColor: pressed ? "white" : "grey",
@@ -160,7 +180,9 @@ const StartScreen = ({ navigation }) => {
             </Text>
           </Pressable>
         </View>
-        {Platform.OS === "ios" || "android" ?<KeyboardAvoidingView behavior="padding" />: null}
+        {Platform.OS === "ios" || "android" ? (
+          <KeyboardAvoidingView behavior="padding" />
+        ) : null}
       </ImageBackground>
     </View>
   );
