@@ -54,15 +54,15 @@ const ChatScreen = ({ db, route, navigation }) => {
 
   }, [navigation, backgroundColor, name, userID]);
 
-  const onSend = async (newMessages) => {
-    const newList = await addDoc(collection(db, "messages"), newMessages)
-    if (newList.id) {
-      setMessages([newList, ...messages]);
-      Alert.alert("message sent")
-    } else {
-      Alert.alert("Message did not send!")
-    }
-  };
+  // const onSend = async (newMessages) => {
+  //   const newList = await addDoc(collection(db, "messages"), newMessages)
+  //   if (newList.id) {
+  //     setMessages([newList, ...messages]);
+  //     Alert.alert("message sent")
+  //   } else {
+  //     Alert.alert("Message did not send!")
+  //   }
+  // };
 
   const renderBubble = (props) => {
     return (
