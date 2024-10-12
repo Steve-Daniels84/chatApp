@@ -40,7 +40,9 @@ const App = () => {
     <NavigationContainer>
       <Stack.Navigator initialRouteName="StartScreen">
         <Stack.Screen name="StartScreen" component={StartScreen} />
-        <Stack.Screen name="ChatScreen" component={ChatScreen} db={db} />
+        <Stack.Screen name="ChatScreen"> 
+          {(props) => <ChatScreen db={db} {...props}/> }
+        </Stack.Screen>
       </Stack.Navigator>
     </NavigationContainer>
   );
