@@ -43,7 +43,7 @@ const ChatScreen = ({ db, route, navigation }) => {
           createdAt: data.createdAt.toDate(), // Convert Firestore timestamp to Date
           user: {
             _id: data.user.id,
-            name: data.user.userName
+            name: data.user.name
           }
         });
       });
@@ -66,34 +66,35 @@ const ChatScreen = ({ db, route, navigation }) => {
     await addDoc(collection(db, "messages"), newItem);
 }
 
-  // const renderBubble = (props) => {
-  //   return (
-  //     <Bubble
-  //       {...props}
-  //       wrapperStyle={{
-  //         right: {
-  //           borderColor: backgroundColor,
-  //           backgroundColor: "white",
-  //           padding: 10,
-  //         },
-  //         left: {
-  //           backgroundColor: "grey",
-  //           borderWidth: 1,
-  //           padding: 10,
-  //         },
-  //       }}
-  //     />
-  //   );
-  // };
+  const renderBubble = (props) => {
+    return (
+      <Bubble
+        {...props}
+        wrapperStyle={{
+          right: {
+            borderColor: backgroundColor,
+            backgroundColor: "whitw",
+            padding: 10,
+          },
+          left: {
+            backgroundColor: backgroundColor,
+            borderWidth: 1,
+            padding: 10,
+          },
+        }}
+      />
+    );
+  };
 
   // // Custom message text rendering
-  // const renderMessageText = (props) => {
-  //   return (
-  //     <Text style={{ color: backgroundColor }}>
-  //       {props.currentMessage.text}
-  //     </Text>
-  //   );
-  // };
+  const renderMessageText = (props) => {
+    return (
+      <Text style={{ color: backgroundColor, color: "white" }}>
+        {props.currentMessage.text}
+
+      </Text>
+    );
+  };
 
   // Custom input toolbar
   const renderInputToolbar = (props) => {
@@ -140,15 +141,15 @@ const ChatScreen = ({ db, route, navigation }) => {
     <View style={styles.container}>
       <GiftedChat
         messages={messages}
-        // renderMessageText={renderMessageText}
-        // renderBubble={renderBubble}
+        renderMessageText={renderMessageText}
+        renderBubble={renderBubble}
         renderInputToolbar={renderInputToolbar}
         renderComposer={renderComposer}
         renderSend={renderSend}
         onSend={(messages) => onSend(messages)}
         user={{
           id: userID,
-          userName: name
+          name: name
         }}
         style={{}}
       />
