@@ -17,10 +17,10 @@ import {
 import { collection, addDoc, onSnapshot, query, where, orderBy } from "firebase/firestore";
 
 const ChatScreen = ({ db, route, navigation }) => {
-  const [messages, setMessages] = useState([]);
-
   //Brings in the navigator parameters
   const { name, backgroundColor, userID } = route.params;
+
+  const [messages, setMessages] = useState([]);
 
   // Sets the page title
   useEffect(() => {
@@ -41,7 +41,10 @@ const ChatScreen = ({ db, route, navigation }) => {
           _id: doc.id,
           text: data.text,
           createdAt: data.createdAt.toDate(), // Convert Firestore timestamp to Date
-          user: data.user,
+          user: {
+            _id: data.user.id,
+            name: data.user.userName
+          }
         });
       });
       setMessages(newMessages);
@@ -55,43 +58,42 @@ const ChatScreen = ({ db, route, navigation }) => {
   }, [navigation, backgroundColor, name, userID]);
 
   const onSend = async (newMessages) => {
-    const newList = await addDoc(collection(db, "messages"), newMessages)
-    if (newList.id) {
-      setMessages([newList, ...messages]);
-      Alert.alert("message sent")
-    } else {
-      Alert.alert("Message did not send!")
+    setMessages(previousMessages => GiftedChat.append(previousMessages, newMessages));
+    let newItem = {
+        ...newMessages[0],
+        createdTime: new Date()
     }
-  };
+    await addDoc(collection(db, "messages"), newItem);
+}
 
-  const renderBubble = (props) => {
-    return (
-      <Bubble
-        {...props}
-        wrapperStyle={{
-          right: {
-            borderColor: backgroundColor,
-            backgroundColor: "white",
-            padding: 10,
-          },
-          left: {
-            backgroundColor: "grey",
-            borderWidth: 1,
-            padding: 10,
-          },
-        }}
-      />
-    );
-  };
+  // const renderBubble = (props) => {
+  //   return (
+  //     <Bubble
+  //       {...props}
+  //       wrapperStyle={{
+  //         right: {
+  //           borderColor: backgroundColor,
+  //           backgroundColor: "white",
+  //           padding: 10,
+  //         },
+  //         left: {
+  //           backgroundColor: "grey",
+  //           borderWidth: 1,
+  //           padding: 10,
+  //         },
+  //       }}
+  //     />
+  //   );
+  // };
 
-  // Custom message text rendering
-  const renderMessageText = (props) => {
-    return (
-      <Text style={{ color: backgroundColor }}>
-        {props.currentMessage.text}
-      </Text>
-    );
-  };
+  // // Custom message text rendering
+  // const renderMessageText = (props) => {
+  //   return (
+  //     <Text style={{ color: backgroundColor }}>
+  //       {props.currentMessage.text}
+  //     </Text>
+  //   );
+  // };
 
   // Custom input toolbar
   const renderInputToolbar = (props) => {
@@ -138,14 +140,14 @@ const ChatScreen = ({ db, route, navigation }) => {
     <View style={styles.container}>
       <GiftedChat
         messages={messages}
-        renderMessageText={renderMessageText}
-        renderBubble={renderBubble}
+        // renderMessageText={renderMessageText}
+        // renderBubble={renderBubble}
         renderInputToolbar={renderInputToolbar}
         renderComposer={renderComposer}
         renderSend={renderSend}
         onSend={(messages) => onSend(messages)}
         user={{
-          _id: userID,
+          id: userID,
           userName: name
         }}
         style={{}}
