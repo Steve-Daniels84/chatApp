@@ -61,7 +61,6 @@ const ChatScreen = ({ db, route, navigation }) => {
     setMessages(previousMessages => GiftedChat.append(previousMessages, newMessages));
     let newItem = {
         ...newMessages[0],
-        createdTime: new Date()
     }
     await addDoc(collection(db, "messages"), newItem);
 }
@@ -91,7 +90,6 @@ const ChatScreen = ({ db, route, navigation }) => {
     return (
       <Text style={{ color: backgroundColor, color: "white" }}>
         {props.currentMessage.text}
-
       </Text>
     );
   };
