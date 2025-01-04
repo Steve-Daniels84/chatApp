@@ -7,7 +7,7 @@ import {
   Platform,
   Alert,
 } from "react-native";
-import NetInfo from "@react-native-community/netinfo"; // Import NetInfo
+import {useNetInfo} from "@react-native-community/netinfo"; // Import NetInfo
 import {
   GiftedChat,
   Bubble,
@@ -31,6 +31,17 @@ const ChatScreen = ({ db, route, navigation }) => {
   const { name, backgroundColor, userID } = route.params;
   const [messages, setMessages] = useState([]);
   const [isConnected, setIsConnected] = useState(true);
+
+  // Connection status hook
+   const netInfo = useNetInfo();
+ 
+  //Monitor connection status & update state
+   useEffect(() => {
+
+    if (netInfo.isConnected) {
+      setIsConnected(true);}
+    else {setIsConnected(false);}
+   }, [netInfo.isConnected]);
 
   // Cache messages locally
   const cacheMessages = async (messagesToCache) => {
@@ -122,9 +133,9 @@ const ChatScreen = ({ db, route, navigation }) => {
         cacheMessages(newMessages);
       });
     } else {
-      Alert.alert("Connection lost!");
       disableNetwork(db);
       loadCachedMessages();
+      renderInputToolbar();
     }
 
     return () => {
@@ -135,7 +146,7 @@ const ChatScreen = ({ db, route, navigation }) => {
   // Effect to sync offline messages when reconnected
   useEffect(() => {
     const syncOfflineMessages = async () => {
-      if (isConnected) {
+      if (!isConnected) {
         try {
           const cachedMessages =
             JSON.parse(await AsyncStorage.getItem("offlineMessages")) || [];
@@ -143,7 +154,6 @@ const ChatScreen = ({ db, route, navigation }) => {
             await addDoc(collection(db, "messages"), message);
           }
           await AsyncStorage.removeItem("offlineMessages");
-          console.log("Offline messages synced to Firebase.");
         } catch (error) {
           console.error("Error syncing offline messages:", error.message);
         }
@@ -152,17 +162,6 @@ const ChatScreen = ({ db, route, navigation }) => {
 
     syncOfflineMessages();
   }, [isConnected, db]);
-
-  // Listen for network changes
-  useEffect(() => {
-    const unsubscribe = NetInfo.addEventListener((state) => {
-      setIsConnected(state.isConnected);
-    });
-
-    return () => {
-      unsubscribe(); // Cleanup the listener on unmount
-    };
-  }, []);
 
   // Custom render methods
   const renderBubble = (props) => (
@@ -240,6 +239,7 @@ const ChatScreen = ({ db, route, navigation }) => {
 
   return (
     <View style={styles.container}>
+      <Text style={styles.connectionStatus} >{isConnected ? "Currently Online" : "Currently Offline"}</Text>
       <GiftedChat
         messages={messages}
         renderMessageText={renderMessageText}
@@ -261,6 +261,11 @@ const ChatScreen = ({ db, route, navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  connectionStatus: {
+    textAlign: "center",
+    padding: 10,
+    color: "black",
   },
 });
 

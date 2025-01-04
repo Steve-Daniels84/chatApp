@@ -1,21 +1,14 @@
 import { StyleSheet, Alert } from "react-native";
-import StartScreen from "./components/StartScreen";
-import ChatScreen from "./components/ChatScreen";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { initializeAuth, getReactNativePersistence } from "firebase/auth";
-import { useNetInfo }from '@react-native-community/netinfo';
-import { useEffect } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-
-//Sets up navigation stack
-const Stack = createNativeStackNavigator();
-
-// Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
+import { initializeAuth, getReactNativePersistence } from "firebase/auth";
+import StartScreen from "./components/StartScreen";
+import ChatScreen from "./components/ChatScreen";
 
-// Your web app's Firebase configuration
+// Firebase configuration
 const firebaseConfig = {
   apiKey: "AIzaSyCnCBuuQzlvnQ9T_wabtVfXSwzEg63k_-g",
   authDomain: "shopping-list-demo-a80e9.firebaseapp.com",
@@ -28,37 +21,33 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 
-//Initiaizes Auth with Async Storage
+// Initialize Firebase services
 const auth = initializeAuth(app, {
   persistence: getReactNativePersistence(AsyncStorage),
 });
-
-// Initialize Cloud Firestore and get a reference to the service
 const db = getFirestore(app);
 
+// Set up navigation stack
+const Stack = createNativeStackNavigator();
+
+
 const App = () => {
-  //Checks connection status
-const connectionStatus = useNetInfo();
-
-
-  useEffect(() => {
-    if (connectionStatus.isConnected === false) {
-      Alert.alert("Connection lost!")
-    } 
-  }, [connectionStatus]);
 
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName="StartScreen">
         <Stack.Screen name="StartScreen" component={StartScreen} />
-        <Stack.Screen name="ChatScreen"> 
-          {(props) => <ChatScreen db={db} isConnected={connectionStatus.isConnected} {...props}/> }
+        <Stack.Screen name="ChatScreen">
+          {(props) => (
+            <ChatScreen db={db} {...props} />
+          )}
         </Stack.Screen>
       </Stack.Navigator>
     </NavigationContainer>
   );
 };
 
+// Styles (if needed for future use)
 const styles = StyleSheet.create({
   container: {
     flex: 1,
