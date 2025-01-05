@@ -83,7 +83,7 @@ const StartScreen = ({ navigation }) => {
             accessible={true}
             accessibilityLabel="Enter your name"
             accessibilityHint="Enter your name into this input"
-            accessibilityValue={name}
+            accessibilityValue={{text: name}}
           />
           {/* User background color choice */}
           <View style={styles.colorPicker}>

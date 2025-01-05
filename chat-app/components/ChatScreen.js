@@ -239,7 +239,7 @@ const ChatScreen = ({ db, route, navigation }) => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.connectionStatus} >{isConnected ? "Currently Online" : "Currently Offline"}</Text>
+      <Text accessibilityValue={{ text: "50%" }} style={styles.connectionStatus} >{isConnected ? "Currently Online" : "Currently Offline"}</Text>
       <GiftedChat
         messages={messages}
         renderMessageText={renderMessageText}
