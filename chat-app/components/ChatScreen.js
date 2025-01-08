@@ -28,15 +28,32 @@ import {
 } from "firebase/firestore";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import MapView from "react-native-maps";
-import CustomActions from './CustomActions';
-
+import CustomActions from "./CustomActions";
+import { v4 as uuidv4 } from "uuid";
 
 const ChatScreen = ({ db, route, navigation }) => {
   const { name, backgroundColor, userID } = route.params;
   const [messages, setMessages] = useState([]);
   const [isConnected, setIsConnected] = useState(true);
   const [image, setImage] = useState(null);
-  const [location, setLocation] = useState(null);
+
+  const renderCustomView = (props) => {
+    const { currentMessage } = props;
+    if (currentMessage.location) {
+      return (
+        <MapView
+          style={{ width: 150, height: 100, borderRadius: 13, margin: 3 }}
+          initialRegion={{
+            latitude: currentMessage.location.latitude,
+            longitude: currentMessage.location.longitude,
+            latitudeDelta: 0.0922,
+            longitudeDelta: 0.0421,
+          }}
+        />
+      );
+    }
+    return null;
+  };
 
   // Connection status hook
   const netInfo = useNetInfo();
@@ -72,6 +89,27 @@ const ChatScreen = ({ db, route, navigation }) => {
 
   // Handle sending a message
   const onSend = async (newMessages) => {
+    console.log("newMessages", newMessages);
+
+    if (newMessages.location) {
+      let locationMessage = newMessages.location;
+      locationMessage = {
+        _id: uuidv4(),
+        location: {
+          latitude: locationMessage.latitude,
+          longitude: locationMessage.longitude,
+        },
+        user: {
+          _id: userID,
+          name: name,
+        },
+      };
+      setMessages((previousMessages) =>
+        GiftedChat.append(previousMessages, locationMessage)
+      );
+      return;
+    }
+
     setMessages((previousMessages) =>
       GiftedChat.append(previousMessages, newMessages)
     );
@@ -121,15 +159,14 @@ const ChatScreen = ({ db, route, navigation }) => {
       const q = query(collection(db, "messages"), orderBy("createdAt", "desc"));
       unsubMessages = onSnapshot(q, (snapshot) => {
         const newMessages = snapshot.docs.map((doc) => {
-          console.log(doc.data());
           const data = doc.data();
           return {
-            _id: doc._id,
+            _id: data._id,
             text: data.text,
             createdAt: data.createdAt?.toDate() || new Date(),
             user: {
-              _id: userID,
-              name: name,
+              id: data.user._id,
+              name: data.user.name,
             },
           };
         });
@@ -163,7 +200,6 @@ const ChatScreen = ({ db, route, navigation }) => {
         }
       }
     };
-
     syncOfflineMessages();
   }, [isConnected, db]);
 
@@ -185,7 +221,6 @@ const ChatScreen = ({ db, route, navigation }) => {
       }}
     />
   );
-
 
   const renderMessageText = (props) => (
     <Text style={{ color: "white" }}>{props.currentMessage.text}</Text>
@@ -247,27 +282,6 @@ const ChatScreen = ({ db, route, navigation }) => {
     return <CustomActions onSend={onSend} {...props} />;
   };
 
-  const renderCustomView = (props) => {
-    const { currentMessage} = props;
-    if (currentMessage.location) {
-      return (
-          <MapView
-            style={{width: 150,
-              height: 100,
-              borderRadius: 13,
-              margin: 3}}
-            region={{
-              latitude: currentMessage.location.latitude,
-              longitude: currentMessage.location.longitude,
-              latitudeDelta: 0.0922,
-              longitudeDelta: 0.0421,
-            }}
-          />
-      );
-    }
-    return null;
-  }
-
   return (
     <View style={styles.container}>
       <Text
@@ -280,17 +294,6 @@ const ChatScreen = ({ db, route, navigation }) => {
         <Image
           source={{ uri: image.uri }}
           style={{ width: 200, height: 200 }}
-        />
-      )}
-      {location && (
-        <MapView
-          style={{ width: 300, height: 200 }}
-          region={{
-            latitude: location.coords.latitude,
-            longitude: location.coords.longitude,
-            latitudeDelta: 0.0922,
-            longitudeDelta: 0.0421,
-          }}
         />
       )}
       <GiftedChat
