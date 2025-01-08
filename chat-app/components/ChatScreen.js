@@ -6,8 +6,9 @@ import {
   KeyboardAvoidingView,
   Platform,
   Alert,
+  Image,
 } from "react-native";
-import {useNetInfo} from "@react-native-community/netinfo"; // Import NetInfo
+import { useNetInfo } from "@react-native-community/netinfo"; // Import NetInfo
 import {
   GiftedChat,
   Bubble,
@@ -26,22 +27,28 @@ import {
   serverTimestamp,
 } from "firebase/firestore";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import MapView from "react-native-maps";
+import CustomActions from './CustomActions';
+
 
 const ChatScreen = ({ db, route, navigation }) => {
   const { name, backgroundColor, userID } = route.params;
   const [messages, setMessages] = useState([]);
   const [isConnected, setIsConnected] = useState(true);
+  const [image, setImage] = useState(null);
+  const [location, setLocation] = useState(null);
 
   // Connection status hook
-   const netInfo = useNetInfo();
- 
-  //Monitor connection status & update state
-   useEffect(() => {
+  const netInfo = useNetInfo();
 
+  //Monitor connection status & update state
+  useEffect(() => {
     if (netInfo.isConnected) {
-      setIsConnected(true);}
-    else {setIsConnected(false);}
-   }, [netInfo.isConnected]);
+      setIsConnected(true);
+    } else {
+      setIsConnected(false);
+    }
+  }, [netInfo.isConnected]);
 
   // Cache messages locally
   const cacheMessages = async (messagesToCache) => {
@@ -55,7 +62,8 @@ const ChatScreen = ({ db, route, navigation }) => {
   // Load cached messages
   const loadCachedMessages = async () => {
     try {
-      const cachedMessages = JSON.parse(await AsyncStorage.getItem("messages")) || [];
+      const cachedMessages =
+        JSON.parse(await AsyncStorage.getItem("messages")) || [];
       setMessages(cachedMessages);
     } catch (error) {
       console.error("Error loading cached messages:", error.message);
@@ -106,28 +114,24 @@ const ChatScreen = ({ db, route, navigation }) => {
 
   // Effect to fetch messages and handle connection state
   useEffect(() => {
-
     let unsubMessages;
 
     if (isConnected) {
       enableNetwork(db);
-      const q = query(
-        collection(db, "messages"),
-        orderBy("createdAt", "desc")
-      );
+      const q = query(collection(db, "messages"), orderBy("createdAt", "desc"));
       unsubMessages = onSnapshot(q, (snapshot) => {
         const newMessages = snapshot.docs.map((doc) => {
+          console.log(doc.data());
           const data = doc.data();
           return {
-            _id: doc.id,
+            _id: doc._id,
             text: data.text,
             createdAt: data.createdAt?.toDate() || new Date(),
             user: {
-              _id: data.user.id,
-              name: data.user.name,
+              _id: userID,
+              name: name,
             },
           };
-          
         });
         setMessages(newMessages);
         cacheMessages(newMessages);
@@ -182,9 +186,11 @@ const ChatScreen = ({ db, route, navigation }) => {
     />
   );
 
+
   const renderMessageText = (props) => (
     <Text style={{ color: "white" }}>{props.currentMessage.text}</Text>
   );
+
   const renderInputToolbar = (props) => {
     if (isConnected)
       return (
@@ -201,7 +207,7 @@ const ChatScreen = ({ db, route, navigation }) => {
       );
     else return null;
   };
-  
+
   const renderComposer = (props) => (
     <Composer
       {...props}
@@ -218,7 +224,7 @@ const ChatScreen = ({ db, route, navigation }) => {
       }}
     />
   );
-  
+
   const renderSend = (props) => (
     <Send
       {...props}
@@ -237,9 +243,56 @@ const ChatScreen = ({ db, route, navigation }) => {
     </Send>
   );
 
+  const renderCustomActions = (props) => {
+    return <CustomActions onSend={onSend} {...props} />;
+  };
+
+  const renderCustomView = (props) => {
+    const { currentMessage} = props;
+    if (currentMessage.location) {
+      return (
+          <MapView
+            style={{width: 150,
+              height: 100,
+              borderRadius: 13,
+              margin: 3}}
+            region={{
+              latitude: currentMessage.location.latitude,
+              longitude: currentMessage.location.longitude,
+              latitudeDelta: 0.0922,
+              longitudeDelta: 0.0421,
+            }}
+          />
+      );
+    }
+    return null;
+  }
+
   return (
     <View style={styles.container}>
-      <Text accessibilityValue={{ text: "50%" }} style={styles.connectionStatus} >{isConnected ? "Currently Online" : "Currently Offline"}</Text>
+      <Text
+        accessibilityValue={{ text: "50%" }}
+        style={styles.connectionStatus}
+      >
+        {isConnected ? "Currently Online" : "Currently Offline"}
+      </Text>
+      {image && (
+        <Image
+          source={{ uri: image.uri }}
+          style={{ width: 200, height: 200 }}
+        />
+      )}
+      {location && (
+        <MapView
+          style={{ width: 300, height: 200 }}
+          region={{
+            latitude: location.coords.latitude,
+            longitude: location.coords.longitude,
+            latitudeDelta: 0.0922,
+            longitudeDelta: 0.0421,
+          }}
+        />
+      )}
       <GiftedChat
         messages={messages}
         renderMessageText={renderMessageText}
@@ -247,13 +300,17 @@ const ChatScreen = ({ db, route, navigation }) => {
         renderInputToolbar={renderInputToolbar}
         renderComposer={renderComposer}
         renderSend={renderSend}
+        renderActions={renderCustomActions}
         onSend={(messages) => onSend(messages)}
+        renderCustomView={renderCustomView}
         user={{
-          id: userID,
+          _id: userID,
           name: name,
         }}
       />
-      {(Platform.OS === "ios" || "android") && <KeyboardAvoidingView behavior="padding" />}
+      {(Platform.OS === "ios" || "android") && (
+        <KeyboardAvoidingView behavior="padding" />
+      )}
     </View>
   );
 };
@@ -266,6 +323,14 @@ const styles = StyleSheet.create({
     textAlign: "center",
     padding: 10,
     color: "black",
+  },
+  buttonContainer: {
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "right",
+    padding: 10,
+    borderColor: "black",
+    borderWidth: 1,
   },
 });
 
