@@ -30,8 +30,9 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import MapView from "react-native-maps";
 import CustomActions from "./CustomActions";
 import { v4 as uuidv4 } from "uuid";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
-const ChatScreen = ({ db, route, navigation }) => {
+const ChatScreen = ({ db, storage, route, navigation }) => {
   const { name, backgroundColor, userID } = route.params;
   const [messages, setMessages] = useState([]);
   const [isConnected, setIsConnected] = useState(true);
@@ -49,6 +50,8 @@ const ChatScreen = ({ db, route, navigation }) => {
             latitudeDelta: 0.0922,
             longitudeDelta: 0.0421,
           }}
+          accessibilityLabel="Map view showing location"
+          accessible={true}
         />
       );
     }
@@ -89,39 +92,41 @@ const ChatScreen = ({ db, route, navigation }) => {
 
   // Handle sending a message
   const onSend = async (newMessages) => {
-    console.log("newMessages", newMessages);
-
-    if (newMessages.location) {
-      let locationMessage = newMessages.location;
-      locationMessage = {
+    const createMessage = (messageType) => {
+      return {
         _id: uuidv4(),
-        location: {
-          latitude: locationMessage.latitude,
-          longitude: locationMessage.longitude,
-        },
+        [messageType]: newMessages[messageType],
         user: {
           _id: userID,
           name: name,
         },
+        createdAt: serverTimestamp(),
       };
-      setMessages((previousMessages) =>
-        GiftedChat.append(previousMessages, locationMessage)
-      );
-      return;
-    }
-
-    setMessages((previousMessages) =>
-      GiftedChat.append(previousMessages, newMessages)
-    );
-
-    const newMessage = {
-      ...newMessages[0],
-      createdAt: serverTimestamp(),
     };
 
+    let processedMessage;
+
+    if (newMessages.location) {
+      processedMessage = createMessage("location");
+      processedMessage.location = {
+        latitude: newMessages.location.latitude,
+        longitude: newMessages.location.longitude,
+      };
+    } else if (newMessages.image) {
+      processedMessage = createMessage("image");
+    } else {
+      processedMessage = { ...newMessages[0], createdAt: serverTimestamp() };
+    }
+
+    // Update local state
+    setMessages((previousMessages) =>
+      GiftedChat.append(previousMessages, processedMessage)
+    );
+
+    // Sync with Firestore or cache offline
     if (isConnected) {
       try {
-        await addDoc(collection(db, "messages"), newMessage);
+        await addDoc(collection(db, "messages"), processedMessage);
       } catch (error) {
         console.error("Error sending message to Firebase:", error.message);
       }
@@ -129,7 +134,7 @@ const ChatScreen = ({ db, route, navigation }) => {
       try {
         const cachedMessages =
           JSON.parse(await AsyncStorage.getItem("offlineMessages")) || [];
-        cachedMessages.push(newMessage);
+        cachedMessages.push(processedMessage);
         await AsyncStorage.setItem(
           "offlineMessages",
           JSON.stringify(cachedMessages)
@@ -168,6 +173,8 @@ const ChatScreen = ({ db, route, navigation }) => {
               id: data.user._id,
               name: data.user.name,
             },
+            image: data.image || null,
+            location: data.location || null,
           };
         });
         setMessages(newMessages);
@@ -246,6 +253,9 @@ const ChatScreen = ({ db, route, navigation }) => {
   const renderComposer = (props) => (
     <Composer
       {...props}
+      accessible={true}
+      accessibilityRole="text"
+      accessibilityLabel="Message input field"
       textInputStyle={{
         borderRadius: 10,
         borderWidth: 1,
@@ -263,6 +273,8 @@ const ChatScreen = ({ db, route, navigation }) => {
   const renderSend = (props) => (
     <Send
       {...props}
+      accessibilityLabel="Send message"
+      accessibilityHint="Tap to send your message"
       containerStyle={{
         justifyContent: "center",
         alignItems: "center",
@@ -279,7 +291,14 @@ const ChatScreen = ({ db, route, navigation }) => {
   );
 
   const renderCustomActions = (props) => {
-    return <CustomActions onSend={onSend} {...props} />;
+    return (
+      <CustomActions
+        onSend={onSend}
+        storage={storage}
+        userId={userID}
+        {...props}
+      />
+    );
   };
 
   return (

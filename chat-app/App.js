@@ -4,6 +4,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
+import { getStorage } from "firebase/storage";
 import { initializeAuth, getReactNativePersistence } from "firebase/auth";
 import StartScreen from "./components/StartScreen";
 import ChatScreen from "./components/ChatScreen";
@@ -13,7 +14,7 @@ const firebaseConfig = {
   apiKey: "AIzaSyCnCBuuQzlvnQ9T_wabtVfXSwzEg63k_-g",
   authDomain: "shopping-list-demo-a80e9.firebaseapp.com",
   projectId: "shopping-list-demo-a80e9",
-  storageBucket: "shopping-list-demo-a80e9.appspot.com",
+  storageBucket: "gs://shopping-list-demo-a80e9.firebasestorage.app",
   messagingSenderId: "385441683319",
   appId: "1:385441683319:web:e72b2158e00ed2778e3372",
 };
@@ -26,6 +27,7 @@ const auth = initializeAuth(app, {
   persistence: getReactNativePersistence(AsyncStorage),
 });
 const db = getFirestore(app);
+const storage = getStorage(app);
 
 // Set up navigation stack
 const Stack = createNativeStackNavigator();
@@ -39,7 +41,7 @@ const App = () => {
         <Stack.Screen name="StartScreen" component={StartScreen} />
         <Stack.Screen name="ChatScreen">
           {(props) => (
-            <ChatScreen db={db} {...props} />
+            <ChatScreen db={db} storage={storage} {...props} />
           )}
         </Stack.Screen>
       </Stack.Navigator>
